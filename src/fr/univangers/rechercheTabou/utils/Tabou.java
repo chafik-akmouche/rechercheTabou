@@ -5,8 +5,8 @@ import java.util.Random;
 
 public class Tabou {
 	
-	public static Configuration meilleurSolution(ArrayList<Configuration> solutions){
-		Configuration bestSolution = solutions.get(0);
+	public static Solution meilleurSolution(ArrayList<Solution> solutions){
+		Solution bestSolution = solutions.get(0);
 		for(int i=0; i<solutions.size(); i++) {
 			if(bestSolution.getCoup() > solutions.get(i).getCoup()) {
 				bestSolution = solutions.get(i);
@@ -16,8 +16,8 @@ public class Tabou {
 	}
 	
 	// renvoie le meilleur voisin après les avoir testé
-	public static Configuration meilleurVoisin(ArrayList<Configuration> voisins) {
-		Configuration meilleurVoisin = voisins.get(0);
+	public static Solution meilleurVoisin(ArrayList<Solution> voisins) {
+		Solution meilleurVoisin = voisins.get(0);
 		for (int i=0; i<voisins.size(); i++) {
 			if(meilleurVoisin.getCoup() > voisins.get(i).getCoup()) {
 				meilleurVoisin = voisins.get(i);

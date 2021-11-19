@@ -1,13 +1,13 @@
 package fr.univangers.rechercheTabou.utils;
 
-public class Configuration {
+public class Solution {
 	private Tournoi tournoi;
 	private int coup;
-	private Mouvement mouvement;
-	public Configuration(Tournoi tournoi, int coup, Mouvement mouvement) {
+	//private Mouvement mouvement;
+	public Solution(Tournoi tournoi, int coup/*, Mouvement mouvement*/) {
 		this.tournoi = tournoi;
 		this.coup = coup;
-		this.mouvement = mouvement;
+		//this.mouvement = mouvement;
 	}
 
 	public Tournoi getTournoi() {
@@ -26,12 +26,12 @@ public class Configuration {
 		this.coup = coup;
 	}
 
-	public Mouvement getMouvement() {
-		return mouvement;
-	}
-
-	public void setMouvement(Mouvement mouvement) {
-		this.mouvement = mouvement;
-	}
+//	public Mouvement getMouvement() {
+//		return mouvement;
+//	}
+//
+//	public void setMouvement(Mouvement mouvement) {
+//		this.mouvement = mouvement;
+//	}
 
 }

@@ -3,11 +3,11 @@ package fr.univangers.rechercheTabou.utils;
 import java.util.ArrayList;
 
 public class Test {	
-	public static final int NBR_EQUIPE = 8;
+	public static final int NBR_EQUIPE = 6;
 	
 	public static void main(String[] args) {
 		Tournoi tournoi = new Tournoi(NBR_EQUIPE);
-		ArrayList<Configuration> solutions = new ArrayList<Configuration>();
+		ArrayList<Solution> solutions = new ArrayList<Solution>();
 	/* --------------------------------------------------------------------------------------------------- */
 	
 		System.out.println("## Nombre d'équipes : " + NBR_EQUIPE);
@@ -39,11 +39,15 @@ public class Test {
 			Tabou.echangeMatch(tournoi, meilleurVoisin.getMatch1(), meilleurVoisin.getMatch2());
 			//System.out.println("Après swap : ");
 			affichageTournoi(tournoi);
-			System.out.println("## Coût de cette configuration = " + Coup.coutConfiguration(tournoi));
+			System.out.println("## Coût = " + Coup.coutConfiguration(tournoi));
+			solutions.add(new Solution(tournoi, Coup.coutConfiguration(tournoi)));
 			it++;
 		}
 		
-		//System.out.println("MEILLEURE SOLUTION : " + Tabou.meilleurSolution(solutions).getCoup() + " | iteration=" + it);
+		System.out.println("====================================================");
+		System.out.println("MEILLEURE SOLUTION : " + Tabou.meilleurSolution(solutions).getCoup() + " | iteration=" + it);
+		affichageTournoi(Tabou.meilleurSolution(solutions).getTournoi());
+		System.out.println("====================================================");
 
 	}
 
