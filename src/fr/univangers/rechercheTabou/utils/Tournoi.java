@@ -17,11 +17,11 @@ public class Tournoi {
 		nbr_semaine = nbr_equipe-1;
 		nbr_periode = nbr_equipe/2;	
 		tournoi = new Match [nbr_semaine][nbr_periode];
-		matchs = generateMatch();
+		matchs = genererMatch();
 	}
 
 	// génération des matchs
-	public Match[] generateMatch () {
+	public Match[] genererMatch () {
 		int nb_match = 0;
 		Match matchsList[] = new Match[((nbr_equipe*nbr_equipe)-nbr_equipe)/2];
 		for (int i=0; i<nbr_equipe-1; i++) {
@@ -34,7 +34,7 @@ public class Tournoi {
 	}
 
 	// création du squelette du planning
-	public Tournoi createPlanning() {
+	public Tournoi creerPlanning() {
 		System.out.println("## Créatin du squelette du planning");
 		for (int i=0; i<nbr_semaine; i++) {
 			for (int j=0; j<nbr_periode; j++) {
@@ -50,9 +50,9 @@ public class Tournoi {
 		Match randMatch = null;
 		for (int i=0; i<nbr_semaine; i++) {
 			for (int j=0; j<nbr_periode; j++) {
-				randMatch = selectMatch();
+				randMatch = selectionnerMatch();
 				while(existMatch(randMatch)) {
-					randMatch = selectMatch();
+					randMatch = selectionnerMatch();
 				}
 				tournoi[i][j] = randMatch;
 				tournoi[i][j].setPosX(i);
@@ -63,7 +63,7 @@ public class Tournoi {
 	}
 	
 	// selectionner aléatoirement un match à partir de la liste des matchs
-	public Match selectMatch() {
+	public Match selectionnerMatch() {
 		return getMatchs()[rand.nextInt(getMatchs().length)];
 	}
 	
