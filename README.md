@@ -1,2 +1,3 @@
 # Recherche Tabou
-Recherche Tabou appliquée au problème SLSP
+Recherche tabou appliquée au problème de planification de rencontres sportives
+Solving the Sports League Scheduling Problem withTabu Search
