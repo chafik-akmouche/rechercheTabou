@@ -6,6 +6,11 @@ public class Mouvement {
 	private Match match2;
 	private int coup;
 	
+	public Mouvement(Match match1, Match match2) {
+		this.match1 = match1;
+		this.match2 = match2;
+	}
+	
 	public Mouvement(Match match1, Match match2, int coup) {
 		this.match1 = match1;
 		this.match2 = match2;

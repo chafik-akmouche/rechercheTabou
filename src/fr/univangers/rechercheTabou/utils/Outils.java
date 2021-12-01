@@ -3,7 +3,7 @@ package fr.univangers.rechercheTabou.utils;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Tabou {
+public class Outils {
 	
 	public static Solution meilleurSolution(ArrayList<Solution> solutions){
 		Solution bestSolution = solutions.get(0);
@@ -27,49 +27,49 @@ public class Tabou {
 	}
 	
 	// exploration voisinage
-		public static Mouvement explorationVoisinage(Tournoi tournoi) {
-			ArrayList<Match> sousEnsemble = sousEnsembleMatch(tournoi); // liste contenant le sous-ensemble sélectionné
-			/*System.out.println("## sous ensemble : "+sousEnsemble.size());
-			for(int i=0; i<sousEnsemble.size(); i++) {
-					System.out.println("["+sousEnsemble.get(i).getEquipe1()+" "+sousEnsemble.get(i).getEquipe2()+"]");
-			}*/
-			
-			ArrayList<Mouvement> voisinsTestes = new ArrayList<Mouvement>(); //liste contenant les configurations testées
-			Mouvement bestVoisin = null;
-			
-			int nb_voisinsTestes = 0;
-			while( nb_voisinsTestes < ((sousEnsemble.size()*sousEnsemble.size())/4) ) {
-				Match match1 = selectMatch1(tournoi, sousEnsemble);
-				Match match2 = selectMatch2(tournoi, sousEnsemble, match1);
-				int iter=0;
-				while((match1==null || match2==null) && iter<200) {
-					match1 = selectMatch1(tournoi, sousEnsemble);
-					match2 = selectMatch2(tournoi, sousEnsemble, match1);
-					iter++;
-				}
-				if (match1 != null && match2 != null) {
-					//System.out.println("---------------------------------------------------");
-					//System.out.println("***** [" + match1.getEquipe1()+" "+match1.getEquipe2()+"] <-> ["+match2.getEquipe1()+" "+match2.getEquipe2()+"]");
-					echangeMatch(tournoi, match1, match2);
-					//System.out.println("Coup de cet echange = "+Coup.coutConfiguration(tournoi));
-					voisinsTestes.add(new Mouvement(match1, match2, Coup.coutConfiguration(tournoi)));
-					echangeMatch(tournoi, match1, match2); // err-it akken i yella
-					//System.out.println("---------------------------------------------------");
-				} else { 
-					System.out.println("Oops <-> 200 iterations <-> Match1==null ou Match2==null");
-				}
-				nb_voisinsTestes++;
+	public static Mouvement explorationVoisinage(Tournoi tournoi) {
+		ArrayList<Match> sousEnsemble = sousEnsembleMatch(tournoi); // liste contenant le sous-ensemble sélectionné
+		/*System.out.println("## sous ensemble : "+sousEnsemble.size());
+		for(int i=0; i<sousEnsemble.size(); i++) {
+				System.out.println("["+sousEnsemble.get(i).getEquipe1()+" "+sousEnsemble.get(i).getEquipe2()+"]");
+		}*/
+		
+		ArrayList<Mouvement> voisinsTestes = new ArrayList<Mouvement>(); //liste contenant les configurations testées
+		Mouvement bestVoisin = null;
+		
+		int nb_voisinsTestes = 0;
+		while( nb_voisinsTestes < ((sousEnsemble.size()*sousEnsemble.size())/4) ) {
+			Match match1 = selectMatch1(tournoi, sousEnsemble);
+			Match match2 = selectMatch2(tournoi, sousEnsemble, match1);
+			int iter=0;
+			while((match1==null || match2==null) && iter<200) {
+				match1 = selectMatch1(tournoi, sousEnsemble);
+				match2 = selectMatch2(tournoi, sousEnsemble, match1);
+				iter++;
 			}
-			
-			bestVoisin = voisinsTestes.get(0);
-			for(int i=0; i<voisinsTestes.size(); i++) {
-				if(bestVoisin.getCoup() > voisinsTestes.get(i).getCoup()) {
-					bestVoisin = voisinsTestes.get(i);
-				}
+			if (match1 != null && match2 != null) {
+				//System.out.println("---------------------------------------------------");
+				//System.out.println("***** [" + match1.getEquipe1()+" "+match1.getEquipe2()+"] <-> ["+match2.getEquipe1()+" "+match2.getEquipe2()+"]");
+				echangeMatch(tournoi, match1, match2);
+				//System.out.println("Coup de cet echange = "+Coup.coutConfiguration(tournoi));
+				voisinsTestes.add(new Mouvement(match1, match2, Coup.coutConfiguration(tournoi)));
+				echangeMatch(tournoi, match1, match2); // err-it akken i yella
+				//System.out.println("---------------------------------------------------");
+			} else { 
+				System.out.println("Oops <-> 200 iterations <-> Match1==null ou Match2==null");
 			}
-			
-			return bestVoisin;	
+			nb_voisinsTestes++;
 		}
+		
+		bestVoisin = voisinsTestes.get(0);
+		for(int i=0; i<voisinsTestes.size(); i++) {
+			if(bestVoisin.getCoup() > voisinsTestes.get(i).getCoup()) {
+				bestVoisin = voisinsTestes.get(i);
+			}
+		}
+		
+		return bestVoisin;	
+	}
 	
 	// sélectionne et renvoie un sous-ensemble de matchs
 	@SuppressWarnings("unused")
