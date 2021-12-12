@@ -17,42 +17,65 @@ public class ChoixMethode {
 		System.out.println("####### Recherche Tabou #######");
 		System.out.println("###############################");
 		int it=0;
-		while(it < max_iteration /*&& bestSolution.getCoup() > 0*/) {
-			startTime = System.nanoTime();
-			Mouvement mvmTabou = null;
-			Mouvement mvmTabouInv = null;
+		while(it < max_iteration && bestSolution.getCoup() > 0) {
+			startTime = System.currentTimeMillis();
 			Mouvement meilleurMouvement = null;
 			meilleurMouvement = Outils.explorationVoisinage(tournoi);
-			//Outils.echangeMatch(tournoi, meilleurVoisin.getMatch1(), meilleurVoisin.getMatch2());
-			//if(Coup.coutConfiguration(tournoi) < bestSolution.getCoup()) {
-				//if(Coup.coutConfiguration(tournoi) <= bestSolution.getCoup()/2) {
-					//bestSolution = new Solution(tournoi, Coup.coutConfiguration(tournoi));
-					//listeTabou.add(meilleurVoisin.getMatch1(), meilleurVoisin.getMatch2());
-					//afficherTournoi(bestSolution.getTournoi());
-					//System.out.println("## f(s') = " + bestSolution.getCoup()+" mouvement = "+it);
-					//System.out.println("Solution très améliorante => prendre comme solution même si elle est dans la liste tabou");
-					//System.out.println("---------------------------------------------------");
-				//} else {
-			mvmTabou = new Mouvement(meilleurMouvement.getMatch1(), meilleurMouvement.getMatch2());
-			mvmTabouInv = new Mouvement(meilleurMouvement.getMatch2(), meilleurMouvement.getMatch1());
-					if(!listeTabou.contains(mvmTabou) && !listeTabou.contains(mvmTabouInv)) {
+			Outils.echangeMatch(tournoi, meilleurMouvement.getMatch1(), meilleurMouvement.getMatch2());	
+			int preEvaluationCoup = Coup.coutConfiguration(tournoi);
+			Outils.echangeMatch(tournoi, meilleurMouvement.getMatch1(), meilleurMouvement.getMatch2());	
+			
+				if(preEvaluationCoup <= bestSolution.getCoup()/2) {
+					Outils.echangeMatch(tournoi, meilleurMouvement.getMatch1(), meilleurMouvement.getMatch2());
+					bestSolution = new Solution(tournoi, Coup.coutConfiguration(tournoi));					
+					afficherTournoi(bestSolution.getTournoi());
+					System.out.println("## f(s') = " + bestSolution.getCoup()+" mouvement = "+it+" | taille de la liste tabou = "+listeTabou.size());
+					System.out.println("Solution très améliorante => accepter la solution même si elle est dans la liste tabou");
+					
+					if(!contient(listeTabou, meilleurMouvement)) {
+						listeTabou.add(meilleurMouvement);
+						System.out.println("Ajout du mouvement ["+meilleurMouvement.getMatch1().getEquipe1()+" "+meilleurMouvement.getMatch1().getEquipe2()+
+							"] <-> ["+meilleurMouvement.getMatch2().getEquipe1()+" "+meilleurMouvement.getMatch2().getEquipe2()+"] à la liste tabou");
+					} else {
+						System.out.println("Mouvement ["+meilleurMouvement.getMatch1().getEquipe1()+" "+meilleurMouvement.getMatch1().getEquipe2()+
+							"] <-> ["+meilleurMouvement.getMatch2().getEquipe1()+" "+meilleurMouvement.getMatch2().getEquipe2()+"] existe déjà dans la liste tabou");
+					}
+					
+					System.out.println("---------------------------------------------------");
+				} else {
+					if(!contient(listeTabou, meilleurMouvement)) {
+						
+						Outils.echangeMatch(tournoi, meilleurMouvement.getMatch1(), meilleurMouvement.getMatch2());	
+						Outils.echangeMatch(tournoi, meilleurMouvement.getMatch1(), meilleurMouvement.getMatch2());
+						
+						if(preEvaluationCoup >= bestSolution.getCoup() ) {
+							System.out.println("Le cout ne s'améliore pas !");
+							if(listeTabou.size() > 0 && listeTabou.get(0)!=null) {
+								System.out.println("Levée du statut tabou au mouvement ["+listeTabou.get(0).getMatch1().getEquipe1()+" "+listeTabou.get(0).getMatch1().getEquipe2()+
+													"] <-> ["+listeTabou.get(0).getMatch2().getEquipe1()+" "+listeTabou.get(0).getMatch2().getEquipe2()+"]");
+								listeTabou.remove(0);
+							}
+						}
+						
 						Outils.echangeMatch(tournoi, meilleurMouvement.getMatch1(), meilleurMouvement.getMatch2());
 						bestSolution = new Solution(tournoi, Coup.coutConfiguration(tournoi));
 						afficherTournoi(bestSolution.getTournoi());
-						System.out.println("## f(s') = " + bestSolution.getCoup()+" | mouvement = "+it);
-						listeTabou.add(new Mouvement(meilleurMouvement.getMatch1(), meilleurMouvement.getMatch2()));
-						System.out.println("Ajout du mouvement ["+meilleurMouvement.getMatch1().getEquipe1()+" "+meilleurMouvement.getMatch1().getEquipe2()+
+						System.out.println("## f(s') = " + bestSolution.getCoup()+" | mouvement = "+it+" | taille de la liste tabou = "+listeTabou.size());
+						
+						listeTabou.add(meilleurMouvement);
+						
+						System.out.println("## Ajout du mouvement ["+meilleurMouvement.getMatch1().getEquipe1()+" "+meilleurMouvement.getMatch1().getEquipe2()+
 								"] <-> ["+meilleurMouvement.getMatch2().getEquipe1()+" "+meilleurMouvement.getMatch2().getEquipe2()+"] à la liste tabou");
 						System.out.println("---------------------------------------------------");
 					} else {
-						System.out.println("Configuration interdite (liste tabou) !");
+						System.out.println("## Mouvement tabou ["+meilleurMouvement.getMatch1().getEquipe1()+" "+meilleurMouvement.getMatch1().getEquipe2()+
+								"] <-> ["+meilleurMouvement.getMatch2().getEquipe1()+" "+meilleurMouvement.getMatch2().getEquipe2()+"]");
 					}
-				//}
-			//}
+				}
 			it++;
 		}
-		endTime = System.nanoTime();
-		System.out.println("MEILLEURE SOLUTION\nf(s*) = " + bestSolution.getCoup() + " | iteration = " + it +" | temps d'execution = "+(endTime-startTime)+" ns");
+		endTime = System.currentTimeMillis();
+		System.out.println("MEILLEURE SOLUTION\nf(s*) = " + bestSolution.getCoup() + " | iteration = " + it +" | temps d'execution = "+(endTime-startTime)+" ms");
 		afficherTournoi(bestSolution.getTournoi());
 	}
 	
@@ -64,12 +87,12 @@ public class ChoixMethode {
 		afficherTournoi(bestSolution.getTournoi());		
 		System.out.println("## f(s0) = " + bestSolution.getCoup());
 		System.out.println("---------------------------------------------------");
-		System.out.println("##################################");
-		System.out.println("####### Recherche Descente #######");
-		System.out.println("##################################");
+		System.out.println("##########################################");
+		System.out.println("####### Recherche Descente stricte #######");
+		System.out.println("##########################################");
 		int it=0;
 		while(it < relance && bestSolution.getCoup() > 0) {
-			startTime = System.nanoTime();
+			startTime = System.currentTimeMillis();
 			Mouvement meilleurVoisin = Outils.explorationVoisinage(tournoi);
 			Outils.echangeMatch(tournoi, meilleurVoisin.getMatch1(), meilleurVoisin.getMatch2());
 			if(Coup.coutConfiguration(tournoi) < bestSolution.getCoup()) {
@@ -80,16 +103,22 @@ public class ChoixMethode {
 			}
 			it++;
 		}
-		endTime = System.nanoTime();
-		System.out.println("MEILLEURE SOLUTION\nf(s*) = " + bestSolution.getCoup() + " | iteration = " + it +" | temps d'execution = "+(endTime-startTime)+" ns");
+		endTime = System.currentTimeMillis();
+		System.out.println("MEILLEURE SOLUTION\nf(s*) = " + bestSolution.getCoup() + " | iteration = " + it +" | temps d'execution = "+(endTime-startTime)+" ms");
 		afficherTournoi(bestSolution.getTournoi());
 	}
-	
-	
-	
-	
-	
-	
+
+	public static boolean contient (ArrayList<Mouvement> liste, Mouvement element) {
+		boolean trouve = false;
+		for (int i=0; i<liste.size(); i++) {
+			if(liste.get(i).getMatch1() == element.getMatch1() && liste.get(i).getMatch2() == element.getMatch2()) {				
+				trouve = true;
+				break;
+			}
+		}
+		return trouve;
+	}
+
 	// affichage du tournoi
 	public static void afficherTournoi (Tournoi tournoi) {
 		for (int i=0; i<tournoi.getNbr_semaine(); i++) {
@@ -101,7 +130,8 @@ public class ChoixMethode {
 				}				
 			}
 		}			
-	}	
+	}
+	
 	// affichage des matchs à jouer
 	public static void afficherMatchsAjouer(Tournoi tournoi) {
 		for (int x=0; x<tournoi.getMatchs().length; x++) {			

@@ -42,7 +42,6 @@ public class Coup {
 			}
 		}
 		occSemaine = occSemaine-1;
-		//System.out.println("pinalité de l'équipe " + equipe + " = " + ((poidP*occPeriode) + (poidS*occSemaine)));
 		return ((poidP*occPeriode) + (poidS*occSemaine));
 	}
 

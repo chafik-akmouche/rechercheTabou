@@ -29,16 +29,12 @@ public class Outils {
 	// exploration voisinage
 	public static Mouvement explorationVoisinage(Tournoi tournoi) {
 		ArrayList<Match> sousEnsemble = sousEnsembleMatch(tournoi); // liste contenant le sous-ensemble sélectionné
-		/*System.out.println("## sous ensemble : "+sousEnsemble.size());
-		for(int i=0; i<sousEnsemble.size(); i++) {
-				System.out.println("["+sousEnsemble.get(i).getEquipe1()+" "+sousEnsemble.get(i).getEquipe2()+"]");
-		}*/
 		
 		ArrayList<Mouvement> voisinsTestes = new ArrayList<Mouvement>(); //liste contenant les configurations testées
 		Mouvement bestVoisin = null;
 		
 		int nb_voisinsTestes = 0;
-		while( nb_voisinsTestes < ((sousEnsemble.size()*sousEnsemble.size())/4) ) {
+		while( nb_voisinsTestes < ((sousEnsemble.size()*sousEnsemble.size())) ) {
 			Match match1 = selectMatch1(tournoi, sousEnsemble);
 			Match match2 = selectMatch2(tournoi, sousEnsemble, match1);
 			int iter=0;
@@ -48,15 +44,11 @@ public class Outils {
 				iter++;
 			}
 			if (match1 != null && match2 != null) {
-				//System.out.println("---------------------------------------------------");
-				//System.out.println("***** [" + match1.getEquipe1()+" "+match1.getEquipe2()+"] <-> ["+match2.getEquipe1()+" "+match2.getEquipe2()+"]");
 				echangeMatch(tournoi, match1, match2);
-				//System.out.println("Coup de cet echange = "+Coup.coutConfiguration(tournoi));
 				voisinsTestes.add(new Mouvement(match1, match2, Coup.coutConfiguration(tournoi)));
-				echangeMatch(tournoi, match1, match2); // err-it akken i yella
-				//System.out.println("---------------------------------------------------");
+				echangeMatch(tournoi, match1, match2); //revenir à la configuration précédente
 			} else { 
-				System.out.println("Oops <-> 200 iterations <-> Match1==null ou Match2==null");
+				System.out.println("Oops <-> Match1 == null ou Match2 == null");
 			}
 			nb_voisinsTestes++;
 		}
@@ -67,7 +59,6 @@ public class Outils {
 				bestVoisin = voisinsTestes.get(i);
 			}
 		}
-		
 		return bestVoisin;	
 	}
 	
@@ -123,7 +114,6 @@ public class Outils {
 	// selectionner un deuxieme match différent du premier
 	public static Match selectMatch2(Tournoi tournoi, ArrayList<Match> sousEnsemble, Match match1) {
 		Match match2 = selectMatchFromSubset(sousEnsemble);
-		//System.out.println("Match 2 : ["+match2.getEquipe1()+" "+match2.getEquipe2()+"]");
 		int iter = 0;
 		while((ligneValable(tournoi, match2.getPosX(), match2) && colonneValable(tournoi, match2.getPosY(), match2) && iter<200) || match2==match1) {
 			match2 = selectMatchFromSubset(sousEnsemble);
@@ -144,7 +134,6 @@ public class Outils {
 			if((match.getEquipe1() == tournoi.getTournoi()[i][j].getEquipe1()) || (match.getEquipe1() == tournoi.getTournoi()[i][j].getEquipe2()) || 
 			   (match.getEquipe2() == tournoi.getTournoi()[i][j].getEquipe1()) || (match.getEquipe2() == tournoi.getTournoi()[i][j].getEquipe2())) {
 				valable = false;
-				//System.out.println("["+match.getEquipe1()+" "+match.getEquipe2()+"] viole la contrainte ligne " + i);
 				break;
 			}
 		}
@@ -161,7 +150,6 @@ public class Outils {
 				occurrence++;
 				if (occurrence >= 2) {			
 					valable = false;
-					//System.out.println("["+match.getEquipe1()+" "+match.getEquipe2()+"] viole la contrainte colonne " + j);
 					break;
 				}
 			}
